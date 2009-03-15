@@ -119,7 +119,7 @@ public class HttpDirectoryResponseHandler {
 					//-- Configure the MimeType of text with the character set
 					// the mimeType = mimeType + "; Charset = UTF-8 ";
 				}
-				res.setMimeType(mimeType);
+				res.setContentType(mimeType);
 
 				// Too eat up memory and once bytes from the file, so commenting
 				// out byte[] data = getFileByte (file); Sets the stream to file

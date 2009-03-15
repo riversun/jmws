@@ -35,18 +35,18 @@ public class HttpRes {
 
 	private ByteArrayOutputStream _baos = new ByteArrayOutputStream();
 	private HttpResponseHeaderInfo _headerInfo = new HttpResponseHeaderInfo();
-	private String mimeType;
+	private String contentType;
 
 	public HttpRes(HttpResponseHeaderInfo headerInfo) {
 		this._headerInfo = headerInfo;
 	}
 
-	public String getMimeType() {
-		return mimeType;
+	public String getContentype() {
+		return contentType;
 	}
 
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
+	public void setContentType(String mimeType) {
+		this.contentType = mimeType;
 	}
 
 	public void addHeader(String headerName, String headerValue) {

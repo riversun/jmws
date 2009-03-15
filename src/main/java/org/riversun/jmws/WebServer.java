@@ -214,7 +214,7 @@ public class WebServer {
 
 					final MimeInfo htmlMimeType = MimeTypeResolver.getMimeInfo(".html");
 
-					res.setMimeType(htmlMimeType.mimeType + "; charset=UTF-8");
+					res.setContentType(htmlMimeType.mimeType + "; charset=UTF-8");
 
 					OutputStream os = res.getOutputStream();
 					PrintWriter out = new PrintWriter(os);

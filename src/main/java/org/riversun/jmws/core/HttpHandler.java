@@ -24,12 +24,14 @@
 package org.riversun.jmws.core;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
@@ -221,7 +223,7 @@ public class HttpHandler implements Runnable {
 			HttpRawResponse doService = doService(req.getUri(), req, res);
 			InputStream responseData = doService.responseData;
 
-			sendHttpResponse(HttpServerDef.HTTP_200_OK, res.getMimeType(), res.getHeaderInfo(), responseData);
+			sendHttpResponse(HttpServerDef.HTTP_200_OK, res.getContentype(), res.getHeaderInfo(), responseData);
 			requestContentReader.close();
 			is.close();
 		} catch (IOException e) {
@@ -364,12 +366,13 @@ public class HttpHandler implements Runnable {
 			os = _socket.getOutputStream();
 
 			// Start / write in the printwriter's content-type
-			pw = new PrintWriter(os);
+			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(os, "UTF-8")));
 			pw.print(HttpServerDef.HTTP_METHOD_VERSION + " " + status + " " + LINE_FEED);
 
 			// Send the server information
 			pw.print(RESPONSE_HEADER_KEY_SERVER_NAME + ": " + HttpServerDef.HTTP_SERVER_NAME + LINE_FEED);
-			
+
+			mimeType="application/json";
 			if (mimeType != null) {
 				pw.print(HttpServerDef.HTTP_CONTENT_TYPE + ": " + mimeType + LINE_FEED);
 			}
