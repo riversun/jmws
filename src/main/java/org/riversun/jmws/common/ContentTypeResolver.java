@@ -31,14 +31,14 @@ import java.util.Map;
  * 
  * @author Tom Misawa (riversun.org@gmail.com)
  * */
-public class MimeTypeResolver {
+public class ContentTypeResolver {
 	public static final String MIME_TYPE_UNKOWN = "mime_type_unkown";
 	static {
 		initializeMimeMap();
 	}
 	private static Map<String, MimeInfo> __mimeMap;
 
-	public static MimeInfo getMimeInfo(String extension) {
+	public static MimeInfo getContentType(String extension) {
 		return __mimeMap.get(extension);
 	}
 

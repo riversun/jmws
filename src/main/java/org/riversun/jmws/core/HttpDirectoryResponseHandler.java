@@ -35,7 +35,7 @@ import org.riversun.jmws.HttpServerDef;
 import org.riversun.jmws.common.EMimeDataType;
 import org.riversun.jmws.common.HttpdLog;
 import org.riversun.jmws.common.MimeInfo;
-import org.riversun.jmws.common.MimeTypeResolver;
+import org.riversun.jmws.common.ContentTypeResolver;
 import org.riversun.jmws.core.HttpHandler.HttpRawResponse;
 import org.riversun.jmws.util.CoString;
 
@@ -103,7 +103,7 @@ public class HttpDirectoryResponseHandler {
 				String fileBody = getFileBody(simpleFileName);
 				String fileExtension = getFileExtensionLowerCase(simpleFileName);
 
-				MimeInfo mimeInfo = MimeTypeResolver.getMimeInfo(fileExtension);
+				MimeInfo mimeInfo = ContentTypeResolver.getContentType(fileExtension);
 
 				HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#doService() detect mime type fileExtension=" + fileExtension + " mimeInfo=" + mimeInfo, 3);
 				if (mimeInfo == null) {
@@ -111,7 +111,7 @@ public class HttpDirectoryResponseHandler {
 
 					// If you could not determine the MIME type as an unknown
 					// treatment, return octed-stream
-					mimeInfo = MimeTypeResolver.getMimeInfo(MimeTypeResolver.MIME_TYPE_UNKOWN);
+					mimeInfo = ContentTypeResolver.getContentType(ContentTypeResolver.MIME_TYPE_UNKOWN);
 				}
 				String mimeType = mimeInfo.mimeType;
 				if (EMimeDataType.TEXT.equals(mimeInfo.dataType)) {

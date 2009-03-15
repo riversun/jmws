@@ -43,7 +43,7 @@ import java.util.Set;
 import org.riversun.jmws.HttpServerDef;
 import org.riversun.jmws.MicroService;
 import org.riversun.jmws.common.HttpdLog;
-import org.riversun.jmws.common.MimeTypeResolver;
+import org.riversun.jmws.common.ContentTypeResolver;
 import org.riversun.jmws.multipart.HttpMultipartDecoder;
 import org.riversun.jmws.util.CoString;
 
@@ -349,7 +349,7 @@ public class HttpHandler implements Runnable {
 		if (msg == null) {
 			msg = "";
 		}
-		sendHttpResponse(status, MimeTypeResolver.getMimeInfo(".txt").mimeType, new ByteArrayInputStream(msg.getBytes()));
+		sendHttpResponse(status, ContentTypeResolver.getContentType(".txt").mimeType, new ByteArrayInputStream(msg.getBytes()));
 	}
 
 	private void sendHttpResponse(String status, String mimeType, InputStream responseIs) {

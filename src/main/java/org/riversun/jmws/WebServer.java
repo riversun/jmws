@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
 
 import org.riversun.jmws.common.HttpdLog;
 import org.riversun.jmws.common.MimeInfo;
-import org.riversun.jmws.common.MimeTypeResolver;
+import org.riversun.jmws.common.ContentTypeResolver;
 import org.riversun.jmws.core.HttpHandler;
 import org.riversun.jmws.core.HttpReq;
 import org.riversun.jmws.core.HttpRes;
@@ -212,7 +212,7 @@ public class WebServer {
 				@Override
 				public void service(HttpReq req, HttpRes res) {
 
-					final MimeInfo htmlMimeType = MimeTypeResolver.getMimeInfo(".html");
+					final MimeInfo htmlMimeType = ContentTypeResolver.getContentType(".html");
 
 					res.setContentType(htmlMimeType.mimeType + "; charset=UTF-8");
 
