@@ -23,6 +23,8 @@
  */
 package org.riversun.jmws.core;
 
+import java.io.BufferedReader;
+
 import org.riversun.jmws.util.CoString;
 
 /**
@@ -36,12 +38,18 @@ public class HttpReq {
 	private HttpProtocolInfo _protocolInfo;
 	private HttpRequestHeaderInfo _headerInfo;
 	private HttpQueryParamInfo _paramInfo;
+	private BufferedReader _reader;
 
-	public HttpReq(HttpProtocolInfo protocolInfo, HttpRequestHeaderInfo headerInfo, HttpQueryParamInfo paramInfo) {
+	public HttpReq(HttpProtocolInfo protocolInfo, HttpRequestHeaderInfo headerInfo, HttpQueryParamInfo paramInfo, BufferedReader reader) {
 		super();
 		this._protocolInfo = protocolInfo;
 		this._headerInfo = headerInfo;
 		this._paramInfo = paramInfo;
+		this._reader = reader;
+	}
+
+	public BufferedReader getReader() {
+		return _reader;
 	}
 
 	public String getUri() {

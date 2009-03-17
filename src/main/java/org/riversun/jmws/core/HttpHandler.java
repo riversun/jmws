@@ -98,8 +98,6 @@ public class HttpHandler implements Runnable {
 			HttpRequestHeaderInfo httpHeaderInfo = hr.getHttpHeaderInfo();
 			final HttpQueryParamInfo queryInfo = new HttpQueryParamInfo();
 
-			// Object containing information about the request
-			final HttpReq req = new HttpReq(protocolInfo, httpHeaderInfo, queryInfo);
 			String contentLength = httpHeaderInfo.getContentLength();
 
 			HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#run() contentLength=" + contentLength, 3);
@@ -145,16 +143,13 @@ public class HttpHandler implements Runnable {
 			byte[] reqContentData = baos.toByteArray();
 			ByteArrayInputStream requestContentIs = new ByteArrayInputStream(reqContentData);
 
+			BufferedReader requestContentReader = new BufferedReader(new InputStreamReader(requestContentIs));
+
+			// Object containing information about the request
+			final HttpReq req = new HttpReq(protocolInfo, httpHeaderInfo, queryInfo, requestContentReader);
+
 			// Required data from [start] ///////// request: content request
 			// when content is loaded by 1 character reader
-			BufferedReader requestContentReader = new BufferedReader(new InputStreamReader(requestContentIs));
-			StringBuilder sb = new StringBuilder();
-			int iOneChar;
-			while ((iOneChar = requestContentReader.read()) != -1) {
-				sb.append((char) iOneChar);
-			}
-			final String requestContentStr = sb.toString();
-			requestContentReader.close();
 
 			// You want to declare that no corresponding request when content is
 			// loaded by 1 character [end]
@@ -211,8 +206,29 @@ public class HttpHandler implements Runnable {
 				}
 
 				else if (POST_CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreCase(contentType)) {
+
+					StringBuilder sb = new StringBuilder();
+					int iOneChar;
+					while ((iOneChar = requestContentReader.read()) != -1) {
+						sb.append((char) iOneChar);
+					}
+					final String requestContentStr = sb.toString();
+
 					final String queryPart = requestContentStr;
 					parseQuery(queryPart, queryInfo);
+
+				} else if (contentType != null) {
+
+					String[] uriBlocks = uri.split("\\?");
+					if (uriBlocks.length == 2) {
+						String uriPart = uriBlocks[0];
+						String queryPart = uriBlocks[1];
+						parseQuery(queryPart, queryInfo);
+
+						// Overwrite without query uri
+						req.setUri(uriPart);
+					}
+
 				} else {
 					throw new HttpServerException(HttpServerDef.HTTP_400_BAD_REQUEST, "Unknown content type. contentType=" + contentType);
 				}
@@ -225,6 +241,7 @@ public class HttpHandler implements Runnable {
 
 			sendHttpResponse(HttpServerDef.HTTP_200_OK, res.getContentype(), res.getHeaderInfo(), responseData);
 			requestContentReader.close();
+
 			is.close();
 		} catch (IOException e) {
 			doSendErrorResponse(HttpServerDef.HTTP_500_INTERNAL_SERVER_ERROR, e.getMessage());
