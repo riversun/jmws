@@ -372,7 +372,6 @@ public class HttpHandler implements Runnable {
 			// Send the server information
 			pw.print(RESPONSE_HEADER_KEY_SERVER_NAME + ": " + HttpServerDef.HTTP_SERVER_NAME + LINE_FEED);
 
-			mimeType="application/json";
 			if (mimeType != null) {
 				pw.print(HttpServerDef.HTTP_CONTENT_TYPE + ": " + mimeType + LINE_FEED);
 			}

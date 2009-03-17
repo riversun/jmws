@@ -37,9 +37,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.riversun.jmws.common.ContentTypeResolver;
 import org.riversun.jmws.common.HttpdLog;
 import org.riversun.jmws.common.MimeInfo;
-import org.riversun.jmws.common.ContentTypeResolver;
 import org.riversun.jmws.core.HttpHandler;
 import org.riversun.jmws.core.HttpReq;
 import org.riversun.jmws.core.HttpRes;
@@ -54,7 +54,7 @@ public class WebServer {
 	private static String LOGTAG = WebServer.class.getSimpleName();
 	private static final int MAX_HTTP_CHILD_THREAD = 20;
 
-	private JmwsServerCallBack _callback;
+	private WebServerCallBack _callback;
 	private ServerSocket _serverSocket = null;
 	private Thread _serverThread = null;
 	private final int _port;
@@ -68,6 +68,17 @@ public class WebServer {
 		return _port;
 	}
 
+	public static void main(String[] args) {
+		new WebServer(80).setServerCallback(new WebServerCallBack() {
+
+			@Override
+			public void onServerStatUpdated(EServerStatus serverStatus, String message) {
+				System.out.println("serverStatus=" + serverStatus + " message=" + message);
+
+			}
+		}).startServer();
+	}
+
 	public WebServer(int port) {
 		HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#WebServer() construct jmws http server as port=" + port + " MAX_HTTP_CHILD_THREAD="
 				+ MAX_HTTP_CHILD_THREAD, 3);
@@ -75,28 +86,13 @@ public class WebServer {
 	}
 
 	/**
-	 * Service
-	 * 
-	 * @param uri
-	 *            to add a service (application logic) request * param service
-	 */
-	public void addService(String uri, MicroService service) {
-		HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#addService() added service class for uri=" + uri + " service=" + service, 3);
-		if (_serviceMap.containsKey(uri)) {
-
-			// To remove existing ones when trying to register with the same URI
-			MicroService jmwsHttpAppService = _serviceMap.get(uri);
-			_serviceMap.remove(jmwsHttpAppService);
-		}
-		_serviceMap.put(uri, service);
-	}
-
-	/**
 	 * @return to retrieve the list of registered Web service
 	 */
 	public List<ServiceInfo> getServiceList() {
+
 		List<ServiceInfo> result = new ArrayList<ServiceInfo>();
 		Set<String> serviceUriSet = _serviceMap.keySet();
+
 		for (String serviceUri : serviceUriSet) {
 			MicroService jmwsHttpAppService = _serviceMap.get(serviceUri);
 			result.add(new ServiceInfo(serviceUri, jmwsHttpAppService));
@@ -127,12 +123,31 @@ public class WebServer {
 	 * * Access * to add the directory @param uri * request * param srcPath
 	 * directories to be able
 	 */
-	public void addDirectory(String uri, String srcPath) {
+	public WebServer addDirectory(String uri, String srcPath) {
 		if (_dirMap.containsKey(uri)) {
 			String string = _dirMap.get(uri);
 			_dirMap.remove(string);
 		}
 		_dirMap.put(uri, srcPath);
+		return WebServer.this;
+	}
+
+	/**
+	 * Service
+	 * 
+	 * @param uri
+	 *            to add a service (application logic) request * param service
+	 */
+	public WebServer addService(String uri, MicroService service) {
+		HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#addService() added service class for uri=" + uri + " service=" + service, 3);
+		if (_serviceMap.containsKey(uri)) {
+
+			// To remove existing ones when trying to register with the same URI
+			MicroService jmwsHttpAppService = _serviceMap.get(uri);
+			_serviceMap.remove(jmwsHttpAppService);
+		}
+		_serviceMap.put(uri, service);
+		return WebServer.this;
 	}
 
 	/**
@@ -171,12 +186,13 @@ public class WebServer {
 		SUCCESSFULLY_STARTED, FAILED_TO_START, SUCCESSFULLY_STOPPED, STOPPED_BY_ERROR;
 	}
 
-	public static interface JmwsServerCallBack {
+	public static interface WebServerCallBack {
 		public void onServerStatUpdated(EServerStatus serverStatus, String message);
 	}
 
-	public void setServerCallback(JmwsServerCallBack callback) {
+	public WebServer setServerCallback(WebServerCallBack callback) {
 		_callback = callback;
+		return WebServer.this;
 	}
 
 	public boolean isRunning() {
