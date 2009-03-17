@@ -71,7 +71,7 @@ public class Example2 {
 			@Override
 			public void service(HttpReq req, HttpRes res) throws Exception {
 
-				res.setContentType("​application/json; charset=UTF-8");
+				res.setContentType("application/json; charset=UTF-8");
 
 				String str1 = req.asString("str1");
 				String str2 = req.asString("str2");
