@@ -42,7 +42,7 @@ public class Example1 {
 
 ```
 
-## Example Code 2 : Publish your <b>REST API</b> to WEB
+## Example Code 2 : Publish your <b>REST API( GET Style)</b> to WEB
 
 - Run Example2.java and open<br/> <b>http://localhost/example?str1=apple&str2=pen</b><br/>with your browser.<br><br>
 - You will get
@@ -96,6 +96,61 @@ public class Example2 {
 
 ```
 
+## Example Code 3 : Publish your <b>REST API (JSON POST Style)</b> to WEB
+
+### Example3.java
+```java
+package com.example;
+
+import java.io.*;
+import org.riversun.jmws.*;
+import org.riversun.jmws.core.*;
+
+public class Example3
+{
+	public static void main(String[] args)
+	{
+
+		final int port = 80;
+
+		final WebServer server = new WebServer(port);
+
+		server.addService("/json_api", new MicroService() {
+
+			@Override
+			public void service(HttpReq req, HttpRes res) throws Exception {
+
+				// Do handle request
+				final StringBuffer sb = new StringBuffer();
+
+				String line = null;
+				BufferedReader reader = req.getReader();
+				while ((line = reader.readLine()) != null) {
+					sb.append(line);
+				}
+				final String requestJsonText = sb.toString();
+
+				System.out.println(requestJsonText);
+
+				// Do respond
+				res.setContentType("application/json; charset=UTF-8");
+
+				String responseJsonText = "{\"result\":\"" + "somthing" + "\" }";
+
+				OutputStream os = res.getOutputStream();
+				PrintWriter out = new PrintWriter(os);
+				out.println(responseJsonText);
+				out.flush();
+				out.close();
+
+			}
+		});
+
+	}
+}
+
+```
+
 ## Tips
 
 - If you want to stop the server.
@@ -105,7 +160,7 @@ server.stopServer();
 
 - Add listener for server status callback
 ```Java
-server.setServerCallback(new JmwsServerCallBack() {
+server.setServerCallback(new ServerCallBack() {
 			@Override
 			public void onServerStatUpdated(EServerStatus serverStatus, String message) {
 				System.out.println("serverStatus=" + serverStatus + " message=" + message);
