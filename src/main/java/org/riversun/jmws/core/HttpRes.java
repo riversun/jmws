@@ -24,6 +24,8 @@
 package org.riversun.jmws.core;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * HTTP response<br>
@@ -57,7 +59,11 @@ public class HttpRes {
 		return _headerInfo;
 	}
 
-	public ByteArrayOutputStream getOutputStream() {
+	public PrintWriter getWriter() throws IOException {
+		return new PrintWriter(getOutputStream());
+	}
+
+	public ByteArrayOutputStream getOutputStream() throws IOException {
 		return _baos;
 	}
 }

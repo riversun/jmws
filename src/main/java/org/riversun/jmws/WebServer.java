@@ -226,7 +226,7 @@ public class WebServer {
 
 			final MicroService welcomeService = new MicroService() {
 				@Override
-				public void service(HttpReq req, HttpRes res) {
+				public void service(HttpReq req, HttpRes res) throws Exception{
 
 					final MimeInfo htmlMimeType = ContentTypeResolver.getContentType(".html");
 
