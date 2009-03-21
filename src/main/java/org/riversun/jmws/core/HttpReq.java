@@ -32,7 +32,7 @@ import org.riversun.jmws.util.CoString;
  * store the HTTP request info
  * 
  * @author Tom Misawa (riversun.org@gmail.com)
- * */
+ */
 public class HttpReq {
 	private String _uri;
 	private HttpProtocolInfo _protocolInfo;
@@ -40,12 +40,17 @@ public class HttpReq {
 	private HttpQueryParamInfo _paramInfo;
 	private BufferedReader _reader;
 
-	public HttpReq(HttpProtocolInfo protocolInfo, HttpRequestHeaderInfo headerInfo, HttpQueryParamInfo paramInfo, BufferedReader reader) {
+	public HttpReq(HttpProtocolInfo protocolInfo, HttpRequestHeaderInfo headerInfo, HttpQueryParamInfo paramInfo,
+			BufferedReader reader) {
 		super();
 		this._protocolInfo = protocolInfo;
 		this._headerInfo = headerInfo;
 		this._paramInfo = paramInfo;
 		this._reader = reader;
+	}
+
+	public HttpProtocolInfo getProtocolInfo() {
+		return _protocolInfo;
 	}
 
 	public BufferedReader getReader() {
