@@ -45,4 +45,10 @@ public class HttpProtocolInfo extends HttpParamColl {
 	public String getProtocol() {
 		return getStringValue(PROTOCOL_INFO_HTTP_VER);
 	}
+
+	@Override
+	public String toString() {
+		return "HttpProtocolInfo [method()=" + getMethod() + ", uri=" + getUri() + ", protocol=" + getProtocol() + "]";
+	}
+	
 }
