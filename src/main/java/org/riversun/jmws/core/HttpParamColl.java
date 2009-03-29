@@ -44,6 +44,11 @@ public class HttpParamColl {
 	public void addParam(HttpParam param) {
 		final String key = param.getKey();
 		if (!_paramMap.containsKey(key)) {
+			// not contains
+			_paramMap.put(key, param);
+		} else {
+			// already contain
+			_paramMap.remove(key);
 			_paramMap.put(key, param);
 		}
 	}

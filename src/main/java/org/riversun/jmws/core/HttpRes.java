@@ -54,6 +54,10 @@ public class HttpRes {
 	public void addHeader(String headerName, String headerValue) {
 		_headerInfo.addParam(new HttpParam(headerName, headerValue));
 	}
+	
+	public HttpParam getHeader(String headerName){
+		return _headerInfo.getParam(headerName);
+	}
 
 	public HttpResponseHeaderInfo getHeaderInfo() {
 		return _headerInfo;
@@ -67,13 +71,4 @@ public class HttpRes {
 		return _baos;
 	}
 
-	public void addAllowCrossOriginHeaders() {
-		addHeader("Access-Control-Allow-Origin", "*");
-		addHeader("Access-Control-Allow-Headers", "Content-Type");
-	}
-
-	public void addAllowLocalhostCrossOriginHeaders() {
-		addHeader("Access-Control-Allow-Origin", "http://localhost");
-		addHeader("Access-Control-Allow-Headers", "Content-Type");
-	}
 }
