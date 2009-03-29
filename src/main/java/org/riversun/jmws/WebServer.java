@@ -131,7 +131,18 @@ public class WebServer {
 		_dirMap.put(uri, srcPath);
 		return WebServer.this;
 	}
+	/**
+	 * WEBAPI
+	 * 
+	 * @param uri
+	 *            to add a service (application logic) request * param service
+	 */
+	public WebServer addWebAPI(String uri, WebAPI webapi) {
+		HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#addWebAPI() added web api class for uri=" + uri + " webapi=" + webapi, 3);
+		addService(uri,webapi);
 
+		return WebServer.this;
+	}
 	/**
 	 * Service
 	 * 
