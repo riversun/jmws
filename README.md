@@ -176,6 +176,6 @@ server.setServerCallback(new ServerCallBack() {
 <dependency>
   <groupId>org.riversun</groupId>
   <artifactId>jmws</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
 </dependency>
 ```
