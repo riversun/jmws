@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
 
-import org.riversun.jmws.MicroService;
+import org.riversun.jmws.common.CORS;
 import org.riversun.jmws.core.HttpParam;
 import org.riversun.jmws.core.HttpProtocolInfo;
 import org.riversun.jmws.core.HttpReq;
@@ -40,6 +40,20 @@ public abstract class WebAPI extends MicroService {
 		LOGGER.fine("");
 		request = req;
 		response = res;
+
+		// CORS handling[begin]////////////////////
+
+		final CORS cors = getClass().getAnnotation(CORS.class);
+		if (cors != null) {
+			final String allowFrom = cors.allowFrom();
+			if (allowFrom != null && !allowFrom.isEmpty()) {
+				setAccessControlAllowOrigin(allowFrom);
+			}
+
+			boolean allowCredentials = cors.allowCredentials();
+			setAccessControlAllowCredentials(allowCredentials);
+		}
+		// CORS handling[end]////////////////////
 
 		if (isPreFlightRequest()) {
 
