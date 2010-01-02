@@ -141,12 +141,11 @@ public class HttpHandler implements Runnable {
 				}
 			}
 			byte[] reqContentData = baos.toByteArray();
+
 			ByteArrayInputStream requestContentIs = new ByteArrayInputStream(reqContentData);
 
-			BufferedReader requestContentReader = new BufferedReader(new InputStreamReader(requestContentIs));
-
 			// Object containing information about the request
-			final HttpReq req = new HttpReq(protocolInfo, httpHeaderInfo, queryInfo, requestContentReader);
+			final HttpReq req = new HttpReq(protocolInfo, httpHeaderInfo, queryInfo, requestContentIs);
 
 			// Required data from [start] ///////// request: content request
 			// when content is loaded by 1 character reader
@@ -154,6 +153,9 @@ public class HttpHandler implements Runnable {
 			// You want to declare that no corresponding request when content is
 			// loaded by 1 character [end]
 			// /////// TODO-alive in the
+
+			BufferedReader reader = null;
+
 			req.setUri(uri);
 			if ("GET".equalsIgnoreCase(method)) {
 
@@ -187,6 +189,7 @@ public class HttpHandler implements Runnable {
 				} else if (cTypeBlocks.length == 1) {
 					contentType = cTypeBlocks[0];
 				}
+
 				HttpdLog.log(HttpdLog.CATE_HTTPD, LOGTAG + "#run() contentType=" + contentType, 3);
 				if (POST_CONTENT_TYPE_MULTIPART_FORMADATA.equalsIgnoreCase(contentType)) {
 					String mutipartBoundary = httpHeaderInfo.getMutipartBoundary();
@@ -209,7 +212,10 @@ public class HttpHandler implements Runnable {
 
 					StringBuilder sb = new StringBuilder();
 					int iOneChar;
-					while ((iOneChar = requestContentReader.read()) != -1) {
+
+					reader = new BufferedReader(new InputStreamReader(requestContentIs));
+
+					while ((iOneChar = reader.read()) != -1) {
 						sb.append((char) iOneChar);
 					}
 					final String requestContentStr = sb.toString();
@@ -240,7 +246,9 @@ public class HttpHandler implements Runnable {
 			InputStream responseData = doService.responseData;
 
 			sendHttpResponse(HttpServerDef.HTTP_200_OK, res.getContentype(), res.getHeaderInfo(), responseData);
-			requestContentReader.close();
+			if (reader != null) {
+				reader.close();
+			}
 
 			is.close();
 		} catch (IOException e) {

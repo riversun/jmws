@@ -24,6 +24,9 @@
 package org.riversun.jmws.core;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.riversun.jmws.util.CoString;
 
@@ -38,23 +41,43 @@ public class HttpReq {
 	private HttpProtocolInfo _protocolInfo;
 	private HttpRequestHeaderInfo _headerInfo;
 	private HttpQueryParamInfo _paramInfo;
-	private BufferedReader _reader;
+	private InputStream _is;
 
 	public HttpReq(HttpProtocolInfo protocolInfo, HttpRequestHeaderInfo headerInfo, HttpQueryParamInfo paramInfo,
-			BufferedReader reader) {
+			InputStream is) {
 		super();
 		this._protocolInfo = protocolInfo;
 		this._headerInfo = headerInfo;
 		this._paramInfo = paramInfo;
-		this._reader = reader;
+		this._is = is;
 	}
 
 	public HttpProtocolInfo getProtocolInfo() {
 		return _protocolInfo;
 	}
 
+	public InputStream getInputStream() {
+		return _is;
+	}
+
+	public BufferedReader getReader(String encoding) {
+
+		BufferedReader reader = null;
+
+		try {
+			reader = new BufferedReader(new InputStreamReader(_is, encoding));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return reader;
+	}
+
 	public BufferedReader getReader() {
-		return _reader;
+
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(_is));
+
+		return reader;
 	}
 
 	public String getUri() {
@@ -67,6 +90,13 @@ public class HttpReq {
 
 	public void setUri(String uri) {
 		this._uri = uri;
+	}
+
+	public String getHeader(String headerName) {
+		if (headerName == null) {
+			return null;
+		}
+		return getHeaderInfo().getStringValue(headerName.toLowerCase());
 	}
 
 	public HttpRequestHeaderInfo getHeaderInfo() {
