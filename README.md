@@ -5,6 +5,8 @@
 - Has basic http operations POST/GET
 - Supports <b>[RFC 2388](http://www.ietf.org/rfc/rfc2388.txt)</b> multipart message.<br/>(<b>File uploading</b> and something.)
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.riversun/finbin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.riversun/finbin)
+
 ## Purpose
 - Debug your web site
 - Debug your micro services logic
