@@ -5,7 +5,7 @@
 - Has basic http operations POST/GET
 - Supports <b>[RFC 2388](http://www.ietf.org/rfc/rfc2388.txt)</b> multipart message.<br/>(<b>File uploading</b> and something.)
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.riversun/finbin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.riversun/finbin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.riversun/jmws/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.riversun/jmws)
 
 ## Purpose
 - Debug your web site
@@ -178,6 +178,6 @@ server.setServerCallback(new ServerCallBack() {
 <dependency>
   <groupId>org.riversun</groupId>
   <artifactId>jmws</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
